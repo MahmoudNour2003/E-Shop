@@ -1,0 +1,38 @@
+@{
+    ViewData["Title"] = "Admin";
+}
+
+<h1 class="mb-4">Admin Panel</h1>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <a asp-controller="AdminCategories" asp-action="Index" class="text-decoration-none">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Categories</h5>
+                    <p class="card-text text-muted mb-0">Manage categories (create, update, delete).</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a asp-controller="AdminProducts" asp-action="Index" class="text-decoration-none">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Products</h5>
+                    <p class="card-text text-muted mb-0">Manage products and stock.</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a asp-controller="AdminOrders" asp-action="Index" class="text-decoration-none">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Orders</h5>
+                    <p class="card-text text-muted mb-0">Review orders and update status.</p>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>

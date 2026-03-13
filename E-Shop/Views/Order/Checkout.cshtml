@@ -1,0 +1,144 @@
+@model E_Shop.Models.CheckoutVM
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<h1 class="mb-3">Checkout</h1>
+
+@if (Model.IsEmpty)
+{
+    <div class="alert alert-info">Your cart is empty.</div>
+    <a asp-controller="Cart" asp-action="Index" class="btn btn-primary">Back to Cart</a>
+}
+else
+{
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <strong>Shipping Address</strong>
+                </div>
+                <div class="card-body">
+                    @if (!Model.Addresses.Any())
+                    {
+                        <div class="alert alert-warning mb-0">
+                            You need to add an address before placing your order.
+                            <a asp-controller="Profile" asp-action="Index" class="alert-link">Add address</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <span asp-validation-for="SelectedAddressId" class="text-danger d-block mb-2"></span>
+
+                        @foreach (var address in Model.Addresses)
+                        {
+                            <div class="form-check border rounded p-3 mb-2">
+                                @if (Model.SelectedAddressId == address.AddressId)
+                                {
+                                    <input class="form-check-input" type="radio" name="SelectedAddressId" id="addr_@address.AddressId" value="@address.AddressId" checked form="checkoutForm" />
+                                }
+                                else
+                                {
+                                    <input class="form-check-input" type="radio" name="SelectedAddressId" id="addr_@address.AddressId" value="@address.AddressId" form="checkoutForm" />
+                                }
+                                <label class="form-check-label w-100" for="addr_@address.AddressId">
+                                    <div class="fw-semibold">
+                                        @address.FullAddress
+                                        @if (address.IsDefault)
+                                        {
+                                            <span class="badge text-bg-success ms-2">Default</span>
+                                        }
+                                    </div>
+                                </label>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <strong>Order Items</strong>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped mb-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>SKU</th>
+                                    <th class="text-end">Unit Price</th>
+                                    <th class="text-center">Qty</th>
+                                    <th class="text-end">Line Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Items)
+                                {
+                                    <tr>
+                                        <td>@item.ProductName</td>
+                                        <td>@item.SKU</td>
+                                        <td class="text-end">@item.UnitPrice.ToString("C")</td>
+                                        <td class="text-center">@item.Quantity</td>
+                                        <td class="text-end">@item.LineTotal.ToString("C")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <form id="checkoutForm" asp-action="Checkout" method="post" class="card">
+                <div class="card-header">
+                    <strong>Summary</strong>
+                </div>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal</span>
+                        <span>@Model.SubTotal.ToString("C")</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Discount</span>
+                        <span>- @Model.DiscountAmount.ToString("C")</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Shipping</span>
+                        <span>@Model.ShippingAmount.ToString("C")</span>
+                    </div>
+                    <hr />
+                    <div class="d-flex justify-content-between fw-bold mb-3">
+                        <span>Total</span>
+                        <span>@Model.Total.ToString("C")</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Notes" class="form-label"></label>
+                        <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="card-footer d-grid gap-2">
+                    <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-secondary">Back to Cart</a>
+                    @if (Model.Addresses.Any())
+                    {
+                        <button type="submit" class="btn btn-success">Place Order</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-success" disabled>Place Order</button>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

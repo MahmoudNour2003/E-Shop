@@ -1,0 +1,52 @@
+@model IEnumerable<E_Shop.Models.AdminOrderListItemVM>
+
+@{
+    ViewData["Title"] = "Admin - Orders";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="mb-0">Orders</h1>
+</div>
+
+@if (TempData["AdminMessage"] is string message)
+{
+    <div class="alert alert-success">@message</div>
+}
+
+<div class="table-responsive">
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Order #</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th class="text-end">Total</th>
+                <th>Status</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.OrderNumber</td>
+                    <td>@item.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>
+                        <div>@item.CustomerName</div>
+                        <small class="text-muted">@item.CustomerEmail</small>
+                    </td>
+                    <td class="text-end">@item.TotalAmount.ToString("C")</td>
+                    <td style="min-width:170px;">
+                        <form asp-action="UpdateStatus" asp-route-id="@item.OrderId" method="post" class="d-flex gap-2">
+                            <select name="status" class="form-select form-select-sm" asp-items="item.StatusOptions"></select>
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Update</button>
+                        </form>
+                    </td>
+                    <td class="text-center">
+                        <a asp-controller="Order" asp-action="Details" asp-route-id="@item.OrderId" class="btn btn-sm btn-outline-secondary">Open</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

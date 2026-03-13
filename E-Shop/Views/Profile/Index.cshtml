@@ -1,0 +1,185 @@
+﻿@model E_Shop.Models.ProfileVM
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">My Profile</h2>
+</div>
+
+@if (TempData["ProfileMessage"] is string message)
+{
+    <div class="alert alert-success">@message</div>
+}
+
+<div class="row g-4">
+    <div class="col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Account Details</h5>
+
+                <form asp-action="UpdateProfile" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="FullName" class="form-label"></label>
+                        <input asp-for="FullName" class="form-control" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input readonly asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="PhoneNumber" class="form-label"></label>
+                        <input asp-for="PhoneNumber" class="form-control" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Save Profile</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mt-4">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Add Address</h5>
+
+                <form asp-action="AddAddress" method="post">
+                    <div class="mb-3">
+                        <label asp-for="NewAddress.Country" class="form-label"></label>
+                        <input asp-for="NewAddress.Country" class="form-control" />
+                        <span asp-validation-for="NewAddress.Country" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="NewAddress.City" class="form-label"></label>
+                        <input asp-for="NewAddress.City" class="form-control" />
+                        <span asp-validation-for="NewAddress.City" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="NewAddress.Street" class="form-label"></label>
+                        <input asp-for="NewAddress.Street" class="form-control" />
+                        <span asp-validation-for="NewAddress.Street" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="NewAddress.Zip" class="form-label"></label>
+                        <input asp-for="NewAddress.Zip" class="form-control" />
+                        <span asp-validation-for="NewAddress.Zip" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input asp-for="NewAddress.IsDefault" class="form-check-input" />
+                        <label asp-for="NewAddress.IsDefault" class="form-check-label"></label>
+                    </div>
+
+                    <button type="submit" class="btn btn-outline-primary w-100">Add Address</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-7">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Saved Addresses</h5>
+
+                @if (!Model.Addresses.Any())
+                {
+                    <p class="text-muted mb-0">No addresses added yet.</p>
+                }
+                else
+                {
+                    <div class="list-group mb-4">
+                        @foreach (var address in Model.Addresses)
+                        {
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <div class="fw-semibold">
+                                            @address.Street, @address.City, @address.Country
+                                            @if (address.IsDefault)
+                                            {
+                                                <span class="badge text-bg-success ms-2">Default</span>
+                                            }
+                                        </div>
+                                        <small class="text-muted">ZIP: @address.Zip</small>
+                                    </div>
+
+                                    <div class="d-flex gap-2">
+                                        <a asp-action="Index" asp-route-editAddressId="@address.AddressId" class="btn btn-sm btn-outline-secondary">Edit</a>
+
+                                        @if (!address.IsDefault)
+                                        {
+                                            <form asp-action="SetDefaultAddress" method="post">
+                                                <input type="hidden" name="addressId" value="@address.AddressId" />
+                                                <button type="submit" class="btn btn-sm btn-outline-primary">Set Default</button>
+                                            </form>
+                                        }
+
+                                        <form asp-action="DeleteAddress" method="post">
+                                            <input type="hidden" name="addressId" value="@address.AddressId" />
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+
+                @if (Model.EditAddressId.HasValue)
+                {
+                    <hr />
+                    <h6 class="mb-3">Edit Address</h6>
+                    <form asp-action="UpdateAddress" method="post">
+                        <input asp-for="EditAddress.AddressId" type="hidden" />
+
+                        <div class="mb-3">
+                            <label asp-for="EditAddress.Country" class="form-label"></label>
+                            <input asp-for="EditAddress.Country" class="form-control" />
+                            <span asp-validation-for="EditAddress.Country" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="EditAddress.City" class="form-label"></label>
+                            <input asp-for="EditAddress.City" class="form-control" />
+                            <span asp-validation-for="EditAddress.City" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="EditAddress.Street" class="form-label"></label>
+                            <input asp-for="EditAddress.Street" class="form-control" />
+                            <span asp-validation-for="EditAddress.Street" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="EditAddress.Zip" class="form-label"></label>
+                            <input asp-for="EditAddress.Zip" class="form-control" />
+                            <span asp-validation-for="EditAddress.Zip" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input asp-for="EditAddress.IsDefault" class="form-check-input" />
+                            <label asp-for="EditAddress.IsDefault" class="form-check-label"></label>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

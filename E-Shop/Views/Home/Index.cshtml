@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="p-5 mb-4 bg-light rounded-3 border">
+    <div class="container-fluid py-2">
+        <h1 class="display-5 fw-bold mb-3">Welcome to E_Shop</h1>
+        <p class="col-lg-8 fs-5 text-muted mb-4">
+            Discover products, manage your cart, and place orders easily.
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+            <a asp-controller="Catalog" asp-action="Index" class="btn btn-primary btn-lg">Browse Catalog</a>
+            <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-secondary btn-lg">View Cart</a>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Shop Products</h5>
+                <p class="card-text text-muted">Filter by category, search quickly, and sort by price or newest.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Fast Checkout</h5>
+                <p class="card-text text-muted">Use saved addresses and place your order in a few clicks.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Track Orders</h5>
+                <p class="card-text text-muted">Open your orders page to check status and details anytime.</p>
+            </div>
+        </div>
+    </div>
+</div>
